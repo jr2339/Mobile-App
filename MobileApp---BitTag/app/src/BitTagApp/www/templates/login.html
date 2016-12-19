@@ -1,0 +1,26 @@
+<ion-view view-title="Help Tile">
+	<ion-content padding="true">
+		<div ng-controller="LogInCtrl">
+			<div class="list">
+				<label class="item item-input">
+					<span class="input-label">
+						Username
+					</span>
+					<input type="text" ng-model="current.name">
+				</label>
+
+				<label class="item item-input">
+					<span class="input-label">
+						Password
+					</span>
+					<input type="password" ng-model="current.password">
+				</label>
+
+				<a class="button button-block button-positive" ng-click="saveData()">
+					Log In
+				</a>
+
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

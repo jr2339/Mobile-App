@@ -1,0 +1,103 @@
+<ion-view view-title="Home" ng-controller="HomeCtrl as home">
+  <ion-content class="padding">
+    <div class="list list-inset" >
+	  <label class="item item-input">
+	    <i class="icon ion-search placeholder-icon"></i>
+      <form ng-submit="search()">
+  	    <input type="text" placeholder="Search" ng-model="search.term"  ng-Trim="false">
+        <button type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;">
+      </form>
+	  </label>
+	</div>
+	<h2 class="text-center">{{mode}}</h2>
+	<div ng-controller="TileCtrl as tile">
+		<ul class="list">
+			<li class="item" ng-repeat="tile in tiles">
+				<!-- <pre>{{tile | json:2}}</pre> -->
+				<div class="list card">
+				  <div class="item item-body">
+				    <img ng-show="tile.imageUrl" class="full-image" src="{{tile.imageUrl}}">
+            <h2 ng-show="!tile.imageUrl"><u>{{tile.displayText}}</u></h2>
+				    <p>
+				      Tiled on: <a ng-href="{{tile.originUrl}}" class="BTOrigin" title="This image was tiled on {{tile.domainName}}" ng-click="followTag(tile)" >{{tile.domainName}}</a> {{tile.shareDate}}
+				    </p>
+				  </div>
+				  <div class="item item-avatar">
+				    <img src="{{tile.user.imageUrl}}">
+				    <h2>{{tile.user.displayName}}</h2>
+				    <div class="item-body">
+				    	<p>{{tile.what}}</p>
+				    </div>
+				  </div>
+				  <div class="button-bar" >
+				  	<a class="button button-stable" ng-click="toggleShareBox({{tile.id}})" ng-class="{active: boxStates[{{tile.id}}] == 2}">
+				  		Share
+				  	</a>
+				  	<a class="button button-stable" ng-click="toggleOrganizeBox({{tile.id}})" ng-class="{active: boxStates[{{tile.id}}] == 3}">
+				  		Organize
+				  	</a>
+				  	<a class="button button-stable" ng-click="toggleCommentBox({{tile.id}})" ng-class="{active: boxStates[{{tile.id}}] == 1}">
+				  		Comments ({{tile.comments.length}})
+				  	</a>
+				  </div>
+				  <div class="commentBox padding" ng-show="commentBoxVisible({{tile.id}})">
+				  	<ion-list>
+				  		<ion-item ng-repeat="comment in tile.comments">
+				    		<img src="{{comment.user.imageUrl}}">
+				    		<h2>{{comment.user.displayName}}</h2>
+				    		<p>{{comment.text}}</p>
+				  		</ion-item>
+				  	</ion-list>
+				  	<label class="item item-input">
+				  		<textarea rows="2" ng-model="$parent.comment" placeHolder="Comment"></textarea>
+				  	</label>
+				  	<button class="button button-positive" ng-click="addComment({{tile}})">
+				  		Submit
+				  	</button>
+				  </div>
+			  	<div class="shareBox padding" ng-show="shareBoxVisible({{tile.id}})">
+			  		<button class="button button-block button-positive item-icon-left" ng-click="shareTile('http://www.facebook.com/sharer/sharer.php?u=http://www.test.helptile.com/ht/followShare/id/' + {{tile.id}})" >
+			  			<i class ="icon ion-social-facebook"></i>
+			  			Facebook
+			  		</button>
+			  		<button class="button button-block button-positive item-icon-left" ng-click="shareTile('https://twitter.com/home?status=http://www.test.helptile.com/ht/followShare/id/' + {{tile.id}})">
+			  			<i class ="icon ion-social-twitter"></i>
+			  			Twitter
+			  		</button>
+			  		<button class="button button-block button-positive item-icon-left" ng-click="shareTile('mailto:?subject=The%20subject%20of%20the%20email&body=http://www.test.helptile.com/ht/followShare/id/' + {{tile.id}})">
+			  			<i class="icon ion-android-mail"></i>
+			  			Email
+			  		</button>
+			  	</div>
+      		<div class="organizeBox padding" ng-show="organizeBoxVisible({{tile.id}})">
+            <p><i>Collections</i></p>
+            <ion-list>
+              <ion-item ng-repeat="collection in currentUser.collections">
+                <div class="item item-button-right">
+                  <p>{{collection.name}}</p>
+                  <button ng-show="inUserCollection(collection.id, tile.collections)" ng-click="removeFromCollection({{tile}}, {{collection}})" class="button button-light">
+                    <i class="icon ion-heart assertive"></i>
+                  </button>
+                  <button ng-show="!inUserCollection(collection.id, tile.collections)" ng-click="addToCollection({{tile}}, {{collection}})" class="button button-light">
+                    <i class="icon ion-heart dark"></i>
+                  </button>
+                </div>
+              </ion-item>
+            </ion-list>
+            <p><i>Add to New Collection</i></p>
+            <label class="item item-input">
+				  		<textarea rows="2" ng-model="$parent.collection" placeHolder="Collection Name"></textarea>
+				  	</label>
+				  	<button class="button button-positive" ng-click="addNewCollection({{tile}})">
+				  		Submit
+				  	</button>
+          </div>
+		  	</div>
+			</li>
+		</ul>
+		<div ng-show="isEmpty()">
+			<h3 class="text-center">There doesn't appear to be anything here</h3>
+		<div>
+	</div>
+  </ion-content>
+</ion-view>
